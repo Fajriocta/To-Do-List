@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do List</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="app-header">
+      <h1>To-Do List</h1>
+      <div id="streakBadge" class="streak-badge"></div>
+    </div>
+
+    <!-- Mood Section -->
+    <div class="mood-section">
+      <p class="mood-label">Mood hari ini?</p>
+      <div class="mood-options">
+        <button class="mood-btn" data-mood="😄">😄</button>
+        <button class="mood-btn" data-mood="🙂">🙂</button>
+        <button class="mood-btn" data-mood="😐">😐</button>
+        <button class="mood-btn" data-mood="😔">😔</button>
+        <button class="mood-btn" data-mood="😤">😤</button>
+      </div>
+      <p id="moodQuote" class="mood-quote"></p>
+    </div>
+
+    <!-- 7-Day History -->
+    <div id="historySection" class="history-section"></div>
+
+    <!-- Reminder Banner -->
+    <div id="reminderBanner" class="reminder-banner hidden">
+      <span id="reminderText"></span>
+      <button id="dismissReminder">✕</button>
+    </div>
+
+    <!-- Insights -->
+    <div class="insights-card">
+      <button class="insights-toggle" id="insightsToggle">
+        📊 Insights <span id="insightsArrow">▼</span>
+      </button>
+      <div id="insightsContent" class="insights-content hidden"></div>
+    </div>
+
+    <!-- Form Tambah Tugas -->
+    <div class="form-card">
+      <div class="input-area">
+        <input type="text" id="taskInput" placeholder="Tambahkan tugas baru..." />
+      </div>
+      <div class="meta-area">
+        <select id="categoryInput">
+          <option value="">Kategori</option>
+          <option value="Kerja">Kerja</option>
+          <option value="Pribadi">Pribadi</option>
+          <option value="Belanja">Belanja</option>
+          <option value="Kesehatan">Kesehatan</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+        <select id="priorityInput">
+          <option value="">Prioritas</option>
+          <option value="Tinggi">Tinggi</option>
+          <option value="Sedang">Sedang</option>
+          <option value="Rendah">Rendah</option>
+        </select>
+        <input type="date" id="deadlineInput" />
+      </div>
+      <button id="addBtn">+ Tambah Tugas</button>
+    </div>
+
+    <!-- Filter + Recommendation hint -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="semua">Semua</button>
+      <button class="filter-btn" data-filter="belum">Belum</button>
+      <button class="filter-btn" data-filter="selesai">Selesai</button>
+    </div>
+    <p id="recommendHint" class="recommend-hint"></p>
+
+    <!-- Daftar Tugas -->
+    <ul id="taskList"></ul>
+
+    <!-- Hapus Semua Data -->
+    <button id="clearDataBtn">🗑 Hapus Semua Data</button>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div id="clearModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Hapus Semua Data?</h2>
+        <p style="font-size:0.9rem;color:#666">Semua tugas, mood history, dan statistik akan dihapus permanen. Tidak bisa dibatalkan.</p>
+        <div class="modal-actions">
+          <button id="confirmClearBtn">Ya, Hapus</button>
+          <button id="cancelClearBtn">Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Edit -->
+    <div id="editModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Edit Tugas</h2>
+        <input type="text" id="editTaskInput" placeholder="Nama tugas" />
+        <select id="editCategoryInput">
+          <option value="">Kategori</option>
+          <option value="Kerja">Kerja</option>
+          <option value="Pribadi">Pribadi</option>
+          <option value="Belanja">Belanja</option>
+          <option value="Kesehatan">Kesehatan</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+        <select id="editPriorityInput">
+          <option value="">Prioritas</option>
+          <option value="Tinggi">Tinggi</option>
+          <option value="Sedang">Sedang</option>
+          <option value="Rendah">Rendah</option>
+        </select>
+        <input type="date" id="editDeadlineInput" />
+        <div class="modal-actions">
+          <button id="saveEditBtn">Simpan</button>
+          <button id="cancelEditBtn">Batal</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
