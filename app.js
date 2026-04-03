@@ -9,6 +9,14 @@ const MOOD_LABELS = {
   '😤': 'Frustrasi',
 };
 
+const MOOD_IMAGES = {
+  '😄': 'img/mood-happy.jpg',
+  '🙂': 'img/mood-ok.jpg',
+  '😐': 'img/mood-neutral.jpg',
+  '😔': 'img/mood-sad.jpg',
+  '😤': 'img/mood-angry.mp4',
+};
+
 const MOOD_QUOTES = {
   '😄': 'Hari yang luar biasa! Selesaikan tugas-tugas penting sekarang. 💪',
   '🙂': 'Kamu di jalur yang benar. Tetap konsisten! 👍',
@@ -34,6 +42,7 @@ const DAY_NAMES = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 let currentFilter  = 'semua';
 let editingIndex   = null;
 let insightsOpen   = false;
+let chromaKeyFrame = null;
 
 // ── Elements ────────────────────────────────────────────────
 const taskInput        = document.getElementById('taskInput');
@@ -63,7 +72,7 @@ const cancelEditBtn    = document.getElementById('cancelEditBtn');
 // ── Init ────────────────────────────────────────────────────
 (function init() {
   const savedMood = getMoodHistory()[TODAY];
-  if (savedMood) applyMoodUI(savedMood);
+  if (savedMood) applyMoodUI(savedMood, false);
 
   renderStreak();
   renderHistory();
@@ -89,7 +98,83 @@ document.querySelectorAll('.mood-btn').forEach(btn => {
   });
 });
 
-function applyMoodUI(mood) {
+function showMoodImage(mood, animate) {
+  const img    = document.getElementById('moodImg');
+  const canvas = document.getElementById('moodCanvas');
+  const video  = document.getElementById('moodVideo');
+  const src    = MOOD_IMAGES[mood];
+
+  stopChromaKey();
+
+  if (!src) {
+    img.className    = 'mood-img';
+    canvas.className = 'mood-img';
+    return;
+  }
+
+  const isVideo = src.endsWith('.mp4') || src.endsWith('.webm');
+
+  if (isVideo) {
+    img.className = 'mood-img'; // sembunyikan img
+    video.src = src;
+    video.load();
+    video.play();
+    video.oncanplay = () => startChromaKey();
+
+    if (animate) {
+      canvas.className = 'mood-img';
+      void canvas.offsetWidth;
+      canvas.className = 'mood-img spinning';
+    } else {
+      canvas.className = 'mood-img visible';
+    }
+  } else {
+    video.pause();
+    canvas.className = 'mood-img'; // sembunyikan canvas
+    img.src = src;
+    img.onerror = () => { img.className = 'mood-img'; };
+    if (animate) {
+      img.className = 'mood-img';
+      void img.offsetWidth;
+      img.className = 'mood-img spinning';
+    } else {
+      img.className = 'mood-img visible';
+    }
+  }
+}
+
+function startChromaKey() {
+  const video  = document.getElementById('moodVideo');
+  const canvas = document.getElementById('moodCanvas');
+  const ctx    = canvas.getContext('2d');
+
+  canvas.width  = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  function draw() {
+    ctx.drawImage(video, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const d = imageData.data;
+    for (let i = 0; i < d.length; i += 4) {
+      if (d[i] < 40 && d[i + 1] < 40 && d[i + 2] < 40) {
+        d[i + 3] = 0; // pixel hitam → transparan
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+    chromaKeyFrame = requestAnimationFrame(draw);
+  }
+
+  chromaKeyFrame = requestAnimationFrame(draw);
+}
+
+function stopChromaKey() {
+  if (chromaKeyFrame) {
+    cancelAnimationFrame(chromaKeyFrame);
+    chromaKeyFrame = null;
+  }
+}
+
+function applyMoodUI(mood, animate = true) {
   // Highlight tombol
   document.querySelectorAll('.mood-btn').forEach(b => {
     b.classList.toggle('selected', b.dataset.mood === mood);
@@ -109,6 +194,9 @@ function applyMoodUI(mood) {
 
   // Tema warna
   applyTheme(mood);
+
+  // Gambar mood
+  showMoodImage(mood, animate);
 }
 
 function applyTheme(mood) {

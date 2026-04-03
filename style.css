@@ -97,6 +97,78 @@ h1 { font-size: 1.6rem; color: #1a1a1a; }
   transition: color var(--transition);
 }
 
+/* ── Mood Image ── */
+.mood-img {
+  position: fixed;
+  left: calc(25vw - 245px);
+  top: 120px;
+  width: 300px;
+  height: 800px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 3px solid var(--accent);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 50;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.mood-img.visible {
+  display: block;
+}
+
+.mood-img.spinning {
+  display: block;
+  animation: slideSpinToLeft 1.6s ease-out forwards;
+}
+
+@keyframes slideSpinToLeft {
+  0%   { transform: perspective(800px) translateX(calc(75vw + 245px)) rotateY(0deg);    opacity: 0; }
+  8%   { opacity: 1; }
+  55%  { transform: perspective(800px) translateX(20px)  rotateY(-570deg); }
+  78%  { transform: perspective(800px) translateX(4px)   rotateY(-706deg); }
+  100% { transform: perspective(800px) translateX(0)     rotateY(-720deg); opacity: 1; }
+}
+
+/* ── Mood Canvas (video dengan chroma key) ── */
+#moodCanvas.mood-img {
+  width: 500px;
+  height: 800px;
+  left: calc(25vw - 385px);
+}
+
+/* ── Mood Image: Mobile ── */
+@media (max-width: 768px) {
+  .mood-img {
+    left: 1vw;
+    top: 15vw;
+    width: 18vw;
+    height: auto;
+    aspect-ratio: 3 / 8;
+    border-radius: 2vw;
+    border-width: 0.3vw;
+  }
+
+  .mood-img.spinning {
+    animation: slideSpinToLeftMobile 1.6s ease-out forwards;
+  }
+
+  #moodCanvas.mood-img {
+    width: 24vw;
+    left: 1vw;
+    height: auto;
+    aspect-ratio: unset;
+  }
+
+  @keyframes slideSpinToLeftMobile {
+    0%   { transform: perspective(800px) translateX(99vw) rotateY(0deg);    opacity: 0; }
+    8%   { opacity: 1; }
+    55%  { transform: perspective(800px) translateX(20px)  rotateY(-570deg); }
+    78%  { transform: perspective(800px) translateX(4px)   rotateY(-706deg); }
+    100% { transform: perspective(800px) translateX(0)     rotateY(-720deg); opacity: 1; }
+  }
+}
+
 /* ── 7-Day History ── */
 .history-section {
   display: flex;
