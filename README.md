@@ -67,4 +67,4 @@ cd To-Do-List
 ## Data & Privasi
 
 Semua data disimpan di **localStorage** browser kamu dan tidak ada server, tidak ada data yang dikirim ke mana pun. 
-Gunakan tombol **Hapus Semua Data** di bagian bawah untuk menghapus seluruh data secara permanen.
+Gunakan tombol **Hapus Semua Data** di bagian bawah untuk menghapus seluruh data
